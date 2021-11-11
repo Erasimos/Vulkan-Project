@@ -10,8 +10,13 @@ extern vec3 cameraDirection;
 extern float  mouseXpos;
 extern float mouseYpos;
 
-void handleEvents(GLFWwindow* window);
+extern const float cameraSpeed;
+extern const float cameraRotationSpeed;
 
-void updateCameraDirection(GLFWwindow* window);
+extern const vec3 worldUp;
 
-void updateCameraPosition(GLFWwindow* window);
+void handleEvents(GLFWwindow* window, float deltaTime);
+
+void updateCameraDirection(GLFWwindow* window, float deltaTime);
+
+void updateCameraPosition(GLFWwindow* window, float deltaTime);

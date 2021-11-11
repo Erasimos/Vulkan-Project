@@ -30,6 +30,11 @@
 
 #include "eventHandler.h"
 
+#include "backends/imgui_impl_vulkan.h"
+#include "backends/imgui_impl_glfw.h"
+
+
+
 vec3 particleMovement = vec3(0.0f);
 
 const int MAX_PARTICLES = 1000;
@@ -49,6 +54,15 @@ const std::vector<const char*> validationLayers = {
 const std::vector<const char*> deviceExtensions = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
+
+static void check_vk_result(VkResult err)
+{
+    if (err == 0)
+        return;
+    fprintf(stderr, "[vulkan] Error: VkResult = %d\n", err);
+    if (err < 0)
+        abort();
+}
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -262,14 +276,29 @@ private:
         createDescriptorSets();
         createCommandBuffers();
         createSyncObjects();
+        createGui();
     }
 
     void mainLoop() {
+
+        auto startTime = std::chrono::high_resolution_clock::now();
+
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             drawFrame();
-            handleEvents(window);
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+            startTime = currentTime;
+            handleEvents(window, deltaTime);
+            UpdateParticles(deltaTime);
+
         }
+
+        
+
+        
+        
 
         vkDeviceWaitIdle(device);
     }
@@ -1159,15 +1188,15 @@ private:
 
     }
 
-    void UpdateParticles(){
+    void UpdateParticles(float deltaTime){
 
-        const float particleSpeed = 0.01f;
+        const float particleSpeed = 4.0f;
         const float ground = 0.f;
         const float roof = 4.f;
 
         for (int i = 0; i < MAX_PARTICLES*6; i++) {
             vec3 oldPos = particleVertices[i].pos;
-            vec3 newPos = oldPos + vec3(0.0f, 0.0f, -particleSpeed);
+            vec3 newPos = oldPos + deltaTime*vec3(0.0f, 0.0f, -particleSpeed);
             
             if (newPos.z < ground) {
                 newPos.z = roof;
@@ -1500,6 +1529,31 @@ private:
         }
     }
 
+    void createGui() {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+        ImGui::StyleColorsDark();
+
+        ImGui_ImplGlfw_InitForVulkan(window, true);
+        ImGui_ImplVulkan_InitInfo init_info = {};
+        init_info.Instance = instance;
+        init_info.PhysicalDevice = physicalDevice;
+        init_info.Device = device;
+        init_info.QueueFamily = 1;
+        init_info.Queue = graphicsQueue;
+        init_info.PipelineCache = VK_NULL_HANDLE;
+        init_info.DescriptorPool = descriptorPool;
+        init_info.Allocator = nullptr;
+        init_info.MinImageCount = 2;
+        init_info.ImageCount = 1;
+        init_info.CheckVkResultFn = check_vk_result;
+        //ImGui_ImplVulkan_Init(&init_info, wd->RenderPass);
+    }
+
     void updateUniformBuffer(uint32_t currentImage) {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -1514,10 +1568,20 @@ private:
         particleMovement.z = 0;
 
         glm::mat4 particleTranslationMatrix = glm::translate(glm::mat4(1.0f), particleMovement);
-        //glm::mat4 particleRotationMatrix = glm::rotate(glm::mat4(1.0f), 10.f, vec3(0.0f, 0.0f, 1.0f));
+
+        vec2 v1 = vec2(cameraDirection.x, cameraDirection.y);
+        vec2 v2 = vec2(1.0f, 0.0f);
+
+        float a = acos(dot(v1, v2) / dot(length(v1), length(v2)));
+
+        if (v1.y < 0) {
+            a = -a;
+        }
+
+        glm::mat4 particleRotationMatrix = glm::rotate(glm::mat4(1.0f), a, worldUp);
 
 
-        ubo.model = particleTranslationMatrix;
+        ubo.model = particleTranslationMatrix * particleRotationMatrix;
         ubo.view = glm::lookAt(cameraPosition, cameraPosition - cameraDirection, glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
@@ -1543,7 +1607,7 @@ private:
         }
 
         updateUniformBuffer(imageIndex);
-        UpdateParticles();
+        
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

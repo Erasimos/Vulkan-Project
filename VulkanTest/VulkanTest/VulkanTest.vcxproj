@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.189.2\Include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glm;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\stb;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.189.2\Include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glm;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\stb;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\tinyobjloader;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.189.2\Include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glm;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\stb;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.189.2\Include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glm;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\glfw\include;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\stb;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\tinyobjloader;C:\Users\Rasmus\Documents\Visual Studio 2019\Libraries\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,7 +155,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="eventHandler.cpp" />
+    <ClCompile Include="gui.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particleSystem.cpp" />
   </ItemGroup>
@@ -167,7 +175,16 @@
     <None Include="shaders\shader2.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imconfig.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\..\..\Visual Studio 2019\Libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="eventHandler.h" />
+    <ClInclude Include="gui.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="vulkanStructs.h" />
   </ItemGroup>
